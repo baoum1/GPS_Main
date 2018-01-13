@@ -15,6 +15,9 @@
 #include "i2c.h"
 #include "lcd.h"
 #include "string.h"
+#include "stdlib.h"					/* Standard Library*/
+#include "globals.h"
+#include "stdio.h"
 
 // === Defines ============================================
 

@@ -1,9 +1,10 @@
-/*
- * main.h
- *
- *  Created on: Jan 13, 2018
- *      Author: Michel
- */
+/**********************************************************
+@file		main.h
+@version	1.0
+@date		13.01.2018
+@author		M. Baour J. Tobler
+@brief		main file of main.c
+**********************************************************/
 
 // === Includes ===========================================
 #ifndef MAIN_H_

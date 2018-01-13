@@ -84,7 +84,7 @@ NMEA_string         0x78              src\uart.o
 errno               0x4               c:/apps/atollic/truestudio for arm 5.5.1/armtools/bin/../lib/gcc/arm-atollic-eabi/5.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/softfp\libc_nano.a(lib_a-reent.o)
 NMEA                0x348             src\nmea.o
 Y_RawError          0x2               src\uart.o
-err_code            0x1               src\gyro.o
+err_code            0x1               src\uart.o
 X_RawError          0x2               src\uart.o
 Z_RawError          0x2               src\uart.o
 
@@ -193,13 +193,13 @@ Discarded input sections
                 0x00000000       0xb4 src\nmea.o
  .text.Display_NMEA
                 0x00000000      0x5ac src\nmea.o
- .debug_info    0x00000000      0x70e src\nmea.o
+ .debug_info    0x00000000      0x72a src\nmea.o
  .debug_abbrev  0x00000000      0x1e5 src\nmea.o
  .debug_aranges
                 0x00000000       0x40 src\nmea.o
  .debug_ranges  0x00000000       0x48 src\nmea.o
- .debug_line    0x00000000      0x335 src\nmea.o
- .debug_str     0x00000000      0x84d src\nmea.o
+ .debug_line    0x00000000      0x340 src\nmea.o
+ .debug_str     0x00000000      0x862 src\nmea.o
  .comment       0x00000000       0x7f src\nmea.o
  .debug_frame   0x00000000       0xd4 src\nmea.o
  .ARM.attributes
@@ -1636,8 +1636,8 @@ LOAD ..\Libraries\libsGUI.a
  .bss.NMEAStringReadyFlag
                 0x200004b4        0x1 src\uart.o
                 0x200004b4                NMEAStringReadyFlag
- .bss.cnt.7713  0x200004b5        0x1 src\uart.o
- .bss.NMEA_start.7715
+ .bss.cnt.7740  0x200004b5        0x1 src\uart.o
+ .bss.NMEA_start.7742
                 0x200004b6        0x1 src\uart.o
  .bss.statesMain
                 0x200004b7        0x1 src\main.o
@@ -1652,15 +1652,13 @@ LOAD ..\Libraries\libsGUI.a
  .bss.deviceDescriptorBlock
                 0x20000500        0x8 ..\Libraries\libBSP.a(ssd1963.o)
  *(COMMON)
- COMMON         0x20000508       0x7e src\uart.o
+ COMMON         0x20000508       0x80 src\uart.o
                 0x20000508                NMEA_string
                 0x20000580                Y_RawError
-                0x20000582                X_RawError
-                0x20000584                Z_RawError
- COMMON         0x20000586        0x1 src\gyro.o
-                0x20000586                err_code
+                0x20000582                err_code
+                0x20000584                X_RawError
+                0x20000586                Z_RawError
                 0x20000588                . = ALIGN (0x4)
- *fill*         0x20000587        0x1 
                 0x20000588                _ebss = .
                 0x20000588                __bss_end__ = _ebss
 
@@ -1749,33 +1747,33 @@ LOAD ..\Libraries\libsGUI.a
                 0x000005b5       0x37 ..\Libraries\libsGUI.a(text.o)
 OUTPUT(GPS_Main.elf elf32-littlearm)
 
-.debug_info     0x00000000     0xa58a
- .debug_info    0x00000000      0x7bc src\uart.o
- .debug_info    0x000007bc      0x249 src\stm32f4xx_it.o
- .debug_info    0x00000a05       0x8c src\startup.o
- .debug_info    0x00000a91      0x24c src\main.o
- .debug_info    0x00000cdd      0x45e src\i2c_init.o
- .debug_info    0x0000113b      0x409 src\gyro.o
- .debug_info    0x00001544      0x7b5 src\delay.o
- .debug_info    0x00001cf9      0x388 src\accelero.o
- .debug_info    0x00002081      0xae4 ..\Libraries\libBSP.a(can.o)
- .debug_info    0x00002b65      0x695 ..\Libraries\libBSP.a(carme.o)
- .debug_info    0x000031fa      0x66c ..\Libraries\libBSP.a(i2c.o)
- .debug_info    0x00003866      0x3d7 ..\Libraries\libBSP.a(ssd1963.o)
- .debug_info    0x00003c3d      0x314 ..\Libraries\libBSP.a(ssd1963_lld.o)
- .debug_info    0x00003f51      0x5c0 ..\Libraries\libBSP.a(system_stm32f4xx.o)
- .debug_info    0x00004511      0x541 ..\Libraries\libBSP.a(misc.o)
- .debug_info    0x00004a52      0x33c ..\Libraries\libBSP.a(stm32f4xx_exti.o)
- .debug_info    0x00004d8e      0x8f9 ..\Libraries\libBSP.a(stm32f4xx_fsmc.o)
- .debug_info    0x00005687      0x609 ..\Libraries\libBSP.a(stm32f4xx_gpio.o)
- .debug_info    0x00005c90      0xb8b ..\Libraries\libBSP.a(stm32f4xx_i2c.o)
- .debug_info    0x0000681b      0xe06 ..\Libraries\libBSP.a(stm32f4xx_rcc.o)
- .debug_info    0x00007621     0x1c65 ..\Libraries\libBSP.a(stm32f4xx_tim.o)
- .debug_info    0x00009286      0x9c6 ..\Libraries\libBSP.a(stm32f4xx_usart.o)
- .debug_info    0x00009c4c      0x491 ..\Libraries\libsGUI.a(font.o)
- .debug_info    0x0000a0dd      0x4ad ..\Libraries\libsGUI.a(text.o)
+.debug_info     0x00000000     0xa5b2
+ .debug_info    0x00000000      0x7d8 src\uart.o
+ .debug_info    0x000007d8      0x249 src\stm32f4xx_it.o
+ .debug_info    0x00000a21       0x8c src\startup.o
+ .debug_info    0x00000aad      0x252 src\main.o
+ .debug_info    0x00000cff      0x45e src\i2c_init.o
+ .debug_info    0x0000115d      0x409 src\gyro.o
+ .debug_info    0x00001566      0x7b5 src\delay.o
+ .debug_info    0x00001d1b      0x38e src\accelero.o
+ .debug_info    0x000020a9      0xae4 ..\Libraries\libBSP.a(can.o)
+ .debug_info    0x00002b8d      0x695 ..\Libraries\libBSP.a(carme.o)
+ .debug_info    0x00003222      0x66c ..\Libraries\libBSP.a(i2c.o)
+ .debug_info    0x0000388e      0x3d7 ..\Libraries\libBSP.a(ssd1963.o)
+ .debug_info    0x00003c65      0x314 ..\Libraries\libBSP.a(ssd1963_lld.o)
+ .debug_info    0x00003f79      0x5c0 ..\Libraries\libBSP.a(system_stm32f4xx.o)
+ .debug_info    0x00004539      0x541 ..\Libraries\libBSP.a(misc.o)
+ .debug_info    0x00004a7a      0x33c ..\Libraries\libBSP.a(stm32f4xx_exti.o)
+ .debug_info    0x00004db6      0x8f9 ..\Libraries\libBSP.a(stm32f4xx_fsmc.o)
+ .debug_info    0x000056af      0x609 ..\Libraries\libBSP.a(stm32f4xx_gpio.o)
+ .debug_info    0x00005cb8      0xb8b ..\Libraries\libBSP.a(stm32f4xx_i2c.o)
+ .debug_info    0x00006843      0xe06 ..\Libraries\libBSP.a(stm32f4xx_rcc.o)
+ .debug_info    0x00007649     0x1c65 ..\Libraries\libBSP.a(stm32f4xx_tim.o)
+ .debug_info    0x000092ae      0x9c6 ..\Libraries\libBSP.a(stm32f4xx_usart.o)
+ .debug_info    0x00009c74      0x491 ..\Libraries\libsGUI.a(font.o)
+ .debug_info    0x0000a105      0x4ad ..\Libraries\libsGUI.a(text.o)
 
-.debug_abbrev   0x00000000     0x20af
+.debug_abbrev   0x00000000     0x209e
  .debug_abbrev  0x00000000      0x148 src\uart.o
  .debug_abbrev  0x00000148      0x108 src\stm32f4xx_it.o
  .debug_abbrev  0x00000250       0x12 src\startup.o
@@ -1783,23 +1781,23 @@ OUTPUT(GPS_Main.elf elf32-littlearm)
  .debug_abbrev  0x00000377      0x114 src\i2c_init.o
  .debug_abbrev  0x0000048b      0x10c src\gyro.o
  .debug_abbrev  0x00000597      0x1cd src\delay.o
- .debug_abbrev  0x00000764      0x105 src\accelero.o
- .debug_abbrev  0x00000869      0x25e ..\Libraries\libBSP.a(can.o)
- .debug_abbrev  0x00000ac7      0x1c0 ..\Libraries\libBSP.a(carme.o)
- .debug_abbrev  0x00000c87      0x1f5 ..\Libraries\libBSP.a(i2c.o)
- .debug_abbrev  0x00000e7c      0x19f ..\Libraries\libBSP.a(ssd1963.o)
- .debug_abbrev  0x0000101b      0x10c ..\Libraries\libBSP.a(ssd1963_lld.o)
- .debug_abbrev  0x00001127      0x138 ..\Libraries\libBSP.a(system_stm32f4xx.o)
- .debug_abbrev  0x0000125f      0x147 ..\Libraries\libBSP.a(misc.o)
- .debug_abbrev  0x000013a6      0x1a7 ..\Libraries\libBSP.a(stm32f4xx_exti.o)
- .debug_abbrev  0x0000154d      0x172 ..\Libraries\libBSP.a(stm32f4xx_fsmc.o)
- .debug_abbrev  0x000016bf      0x1a5 ..\Libraries\libBSP.a(stm32f4xx_gpio.o)
- .debug_abbrev  0x00001864      0x166 ..\Libraries\libBSP.a(stm32f4xx_i2c.o)
- .debug_abbrev  0x000019ca      0x1bc ..\Libraries\libBSP.a(stm32f4xx_rcc.o)
- .debug_abbrev  0x00001b86      0x189 ..\Libraries\libBSP.a(stm32f4xx_tim.o)
- .debug_abbrev  0x00001d0f      0x157 ..\Libraries\libBSP.a(stm32f4xx_usart.o)
- .debug_abbrev  0x00001e66       0xaa ..\Libraries\libsGUI.a(font.o)
- .debug_abbrev  0x00001f10      0x19f ..\Libraries\libsGUI.a(text.o)
+ .debug_abbrev  0x00000764       0xf4 src\accelero.o
+ .debug_abbrev  0x00000858      0x25e ..\Libraries\libBSP.a(can.o)
+ .debug_abbrev  0x00000ab6      0x1c0 ..\Libraries\libBSP.a(carme.o)
+ .debug_abbrev  0x00000c76      0x1f5 ..\Libraries\libBSP.a(i2c.o)
+ .debug_abbrev  0x00000e6b      0x19f ..\Libraries\libBSP.a(ssd1963.o)
+ .debug_abbrev  0x0000100a      0x10c ..\Libraries\libBSP.a(ssd1963_lld.o)
+ .debug_abbrev  0x00001116      0x138 ..\Libraries\libBSP.a(system_stm32f4xx.o)
+ .debug_abbrev  0x0000124e      0x147 ..\Libraries\libBSP.a(misc.o)
+ .debug_abbrev  0x00001395      0x1a7 ..\Libraries\libBSP.a(stm32f4xx_exti.o)
+ .debug_abbrev  0x0000153c      0x172 ..\Libraries\libBSP.a(stm32f4xx_fsmc.o)
+ .debug_abbrev  0x000016ae      0x1a5 ..\Libraries\libBSP.a(stm32f4xx_gpio.o)
+ .debug_abbrev  0x00001853      0x166 ..\Libraries\libBSP.a(stm32f4xx_i2c.o)
+ .debug_abbrev  0x000019b9      0x1bc ..\Libraries\libBSP.a(stm32f4xx_rcc.o)
+ .debug_abbrev  0x00001b75      0x189 ..\Libraries\libBSP.a(stm32f4xx_tim.o)
+ .debug_abbrev  0x00001cfe      0x157 ..\Libraries\libBSP.a(stm32f4xx_usart.o)
+ .debug_abbrev  0x00001e55       0xaa ..\Libraries\libsGUI.a(font.o)
+ .debug_abbrev  0x00001eff      0x19f ..\Libraries\libsGUI.a(text.o)
 
 .debug_aranges  0x00000000      0xd28
  .debug_aranges
@@ -1876,38 +1874,38 @@ OUTPUT(GPS_Main.elf elf32-littlearm)
  .debug_ranges  0x00000a48       0xf0 ..\Libraries\libBSP.a(stm32f4xx_usart.o)
  .debug_ranges  0x00000b38       0x70 ..\Libraries\libsGUI.a(text.o)
 
-.debug_line     0x00000000     0x3e19
- .debug_line    0x00000000      0x1b3 src\uart.o
- .debug_line    0x000001b3      0x24c src\stm32f4xx_it.o
- .debug_line    0x000003ff       0x99 src\startup.o
- .debug_line    0x00000498      0x1ad src\main.o
- .debug_line    0x00000645      0x175 src\i2c_init.o
- .debug_line    0x000007ba      0x1bb src\gyro.o
- .debug_line    0x00000975      0x1d3 src\delay.o
- .debug_line    0x00000b48      0x192 src\accelero.o
- .debug_line    0x00000cda      0x35f ..\Libraries\libBSP.a(can.o)
- .debug_line    0x00001039      0x458 ..\Libraries\libBSP.a(carme.o)
- .debug_line    0x00001491      0x276 ..\Libraries\libBSP.a(i2c.o)
- .debug_line    0x00001707      0x23f ..\Libraries\libBSP.a(ssd1963.o)
- .debug_line    0x00001946      0x130 ..\Libraries\libBSP.a(ssd1963_lld.o)
- .debug_line    0x00001a76      0x160 ..\Libraries\libBSP.a(system_stm32f4xx.o)
- .debug_line    0x00001bd6      0x15c ..\Libraries\libBSP.a(misc.o)
- .debug_line    0x00001d32      0x1b3 ..\Libraries\libBSP.a(stm32f4xx_exti.o)
- .debug_line    0x00001ee5      0x36b ..\Libraries\libBSP.a(stm32f4xx_fsmc.o)
- .debug_line    0x00002250      0x25c ..\Libraries\libBSP.a(stm32f4xx_gpio.o)
- .debug_line    0x000024ac      0x41c ..\Libraries\libBSP.a(stm32f4xx_i2c.o)
- .debug_line    0x000028c8      0x558 ..\Libraries\libBSP.a(stm32f4xx_rcc.o)
- .debug_line    0x00002e20      0x97c ..\Libraries\libBSP.a(stm32f4xx_tim.o)
- .debug_line    0x0000379c      0x3bf ..\Libraries\libBSP.a(stm32f4xx_usart.o)
- .debug_line    0x00003b5b       0x8b ..\Libraries\libsGUI.a(font.o)
- .debug_line    0x00003be6      0x233 ..\Libraries\libsGUI.a(text.o)
+.debug_line     0x00000000     0x3e24
+ .debug_line    0x00000000      0x1be src\uart.o
+ .debug_line    0x000001be      0x24c src\stm32f4xx_it.o
+ .debug_line    0x0000040a       0x99 src\startup.o
+ .debug_line    0x000004a3      0x1ad src\main.o
+ .debug_line    0x00000650      0x175 src\i2c_init.o
+ .debug_line    0x000007c5      0x1c5 src\gyro.o
+ .debug_line    0x0000098a      0x1d3 src\delay.o
+ .debug_line    0x00000b5d      0x188 src\accelero.o
+ .debug_line    0x00000ce5      0x35f ..\Libraries\libBSP.a(can.o)
+ .debug_line    0x00001044      0x458 ..\Libraries\libBSP.a(carme.o)
+ .debug_line    0x0000149c      0x276 ..\Libraries\libBSP.a(i2c.o)
+ .debug_line    0x00001712      0x23f ..\Libraries\libBSP.a(ssd1963.o)
+ .debug_line    0x00001951      0x130 ..\Libraries\libBSP.a(ssd1963_lld.o)
+ .debug_line    0x00001a81      0x160 ..\Libraries\libBSP.a(system_stm32f4xx.o)
+ .debug_line    0x00001be1      0x15c ..\Libraries\libBSP.a(misc.o)
+ .debug_line    0x00001d3d      0x1b3 ..\Libraries\libBSP.a(stm32f4xx_exti.o)
+ .debug_line    0x00001ef0      0x36b ..\Libraries\libBSP.a(stm32f4xx_fsmc.o)
+ .debug_line    0x0000225b      0x25c ..\Libraries\libBSP.a(stm32f4xx_gpio.o)
+ .debug_line    0x000024b7      0x41c ..\Libraries\libBSP.a(stm32f4xx_i2c.o)
+ .debug_line    0x000028d3      0x558 ..\Libraries\libBSP.a(stm32f4xx_rcc.o)
+ .debug_line    0x00002e2b      0x97c ..\Libraries\libBSP.a(stm32f4xx_tim.o)
+ .debug_line    0x000037a7      0x3bf ..\Libraries\libBSP.a(stm32f4xx_usart.o)
+ .debug_line    0x00003b66       0x8b ..\Libraries\libsGUI.a(font.o)
+ .debug_line    0x00003bf1      0x233 ..\Libraries\libsGUI.a(text.o)
 
 .debug_str      0x00000000     0x3ddb
- .debug_str     0x00000000      0xa77 src\uart.o
-                                0xaef (size before relaxing)
- .debug_str     0x00000a77      0x139 src\stm32f4xx_it.o
+ .debug_str     0x00000000      0xa8c src\uart.o
+                                0xb04 (size before relaxing)
+ .debug_str     0x00000a8c      0x139 src\stm32f4xx_it.o
                                 0x338 (size before relaxing)
- .debug_str     0x00000bb0       0xba src\main.o
+ .debug_str     0x00000bc5       0xa5 src\main.o
                                 0x303 (size before relaxing)
  .debug_str     0x00000c6a       0xd0 src\i2c_init.o
                                 0x4b0 (size before relaxing)
@@ -2647,8 +2645,11 @@ cleanup_glue                                      c:/apps/atollic/truestudio for
 delay                                             src\delay.o
 end                                               src\syscalls.o
 environ                                           src\syscalls.o
-err_code                                          src\gyro.o
-                                                  src\accelero.o
+err_code                                          src\accelero.o
+                                                  src\gyro.o
+                                                  src\main.o
+                                                  src\nmea.o
+                                                  src\uart.o
 errno                                             c:/apps/atollic/truestudio for arm 5.5.1/armtools/bin/../lib/gcc/arm-atollic-eabi/5.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/softfp\libc_nano.a(lib_a-reent.o)
                                                   c:/apps/atollic/truestudio for arm 5.5.1/armtools/bin/../lib/gcc/arm-atollic-eabi/5.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/softfp\libc_nano.a(lib_a-sbrkr.o)
                                                   src\syscalls.o

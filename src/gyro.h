@@ -12,6 +12,10 @@
 // === Includes ===========================================
 #include <stm32f4xx.h>		// Processor STM32F407IG
 #include "i2c.h"
+#include "globals.h"
+#include "lcd.h"
+#include "stdlib.h"
+#include <stdio.h>
 
 // === Defines ============================================
 

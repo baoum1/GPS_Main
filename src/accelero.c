@@ -1,5 +1,5 @@
 /**********************************************************
-@file		uart.c
+@file		accelero.c
 @version	1.0
 @date		13.01.2018
 @author		M. Baour J. Tobler
@@ -8,7 +8,6 @@
 
 // === Includes ===========================================
 #include "accelero.h"
-#include "main.h"
 
 // === Functions ==========================================
 void AcceleroInit(void)
