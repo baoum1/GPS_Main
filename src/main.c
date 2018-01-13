@@ -12,13 +12,21 @@
 #include <carme.h>			// CARME Module
 #include <stdio.h>
 #include <lcd.h>
-// buttons
+#include "stdlib.h"					/* Standard Library	*/
+#include "string.h"					/* String Library */
 
 // delay
 #include "delay.h"
 // accelero
-
+#include "accelero.h"
 // gyroscope
+#include "gyro.h"
+// i2c
+#include "i2c_init.h"
+// uart
+#include "uart.h"
+// nmea
+#include "nmea.h"
 
 
 
@@ -37,6 +45,12 @@ typedef enum statesMain
 // for main menu FSM
 StatesMainMenu statesMainMenu = IDLE;
 
+
+
+/*----- Data ---------------------------------------------------------------*/
+static __IO uint32_t TimingDelay;
+
+
 // === Function prototypes ================================
 
 /* FSM of the main menu, inclusive the gui handling */
@@ -47,19 +61,32 @@ void mainFSM();
 int main()
 {
 
-	// init Buttons
+	/* LCD Init */
+	LCD_SetTextColor(GUI_COLOR_WHITE);	// Schfiftfarbe setzen
+	LCD_SetFont(&font_5x7);
 
+	LCD_Init(); 						// CARME LCD initialisieren
 
-	// init I2C
+	/* USART1 Init */
+	Init_USART1();
 
+	/* I2C Init */
+	Init_I2C2();
 
-	// init loop delay on timer 7
-	initDelayFuctions();
+	// Init Accelerometer
+	AcceleroInit();
 
-	// init LCD
-	//LCD_Init();
+	// Init Gyro
+	GyroInit();
 
-	// init Accelero
+	// Init NMEA struct
+	strncpy(NMEA.GGA, "GGA:", 4);
+	strncpy(NMEA.GSA, "GSA:", 4);
+	strncpy(NMEA.GLL, "GLL:", 4);
+	strncpy(NMEA.GSV, "GSV:", 4);
+	strncpy(NMEA.RMC, "RMC:", 4);
+	strncpy(NMEA.VTG, "VTG:", 4);
+	strncpy(NMEA.ZDA, "ZDA:", 4);
 
 	// endless
 	for( ;; )
