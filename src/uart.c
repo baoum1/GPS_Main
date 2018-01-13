@@ -8,7 +8,7 @@
 
 // === Includes ===========================================
 #include "uart.h"
-#include "nmea.h"
+
 
 // === Functions ==========================================
 void Init_USART1(void)
@@ -81,7 +81,7 @@ void USART1_IRQHandler(void)
 			}
 			if(NMEA_start)
 			{
-				 NMEA_string[cnt++] = t;
+				NMEA_string[cnt++] = t;
 			}
 		}
 		else

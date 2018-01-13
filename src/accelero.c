@@ -8,7 +8,7 @@
 
 // === Includes ===========================================
 #include "accelero.h"
-#include "gyro.h"
+#include "main.h"
 
 // === Functions ==========================================
 void AcceleroInit(void)

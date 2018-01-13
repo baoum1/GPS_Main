@@ -8,27 +8,8 @@
  *********************************************************/
 
 // === Includes ===========================================
-#include <stm32f4xx.h>		// Processor STM32F407IG
-#include <carme.h>			// CARME Module
-#include <stdio.h>
-#include <lcd.h>
-#include "stdlib.h"					/* Standard Library	*/
-#include "string.h"					/* String Library */
 
-// delay
-#include "delay.h"
-// accelero
-#include "accelero.h"
-// gyroscope
-#include "gyro.h"
-// i2c
-#include "i2c_init.h"
-// uart
-#include "uart.h"
-// nmea
-#include "nmea.h"
-
-
+#include "main.h"
 
 // === Enums, Structs, etc ================================
 typedef enum statesMain
@@ -38,12 +19,12 @@ typedef enum statesMain
 	CHECK_GPS_VALID,
 	GET_A_GYR_DATA,
 
-} StatesMainMenu;
+} StatesMain;
 
 // === Variables ==========================================
 
 // for main menu FSM
-StatesMainMenu statesMainMenu = IDLE;
+StatesMain statesMain = IDLE;
 
 
 
@@ -80,13 +61,7 @@ int main()
 	GyroInit();
 
 	// Init NMEA struct
-	strncpy(NMEA.GGA, "GGA:", 4);
-	strncpy(NMEA.GSA, "GSA:", 4);
-	strncpy(NMEA.GLL, "GLL:", 4);
-	strncpy(NMEA.GSV, "GSV:", 4);
-	strncpy(NMEA.RMC, "RMC:", 4);
-	strncpy(NMEA.VTG, "VTG:", 4);
-	strncpy(NMEA.ZDA, "ZDA:", 4);
+
 
 	// endless
 	for( ;; )
@@ -105,7 +80,7 @@ int main()
 /* FSM of the main menu, inclusive the gui handling */
 void mainFSM()
 {
-	switch( statesMainMenu )
+	switch( statesMain )
 	{
 		case IDLE:
 

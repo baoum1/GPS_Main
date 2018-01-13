@@ -11,8 +11,7 @@
 
 // === Includes ===========================================
 #include "stm32f4xx_usart.h"		/* UART STM32F4 Module*/
-
-// === Defines ============================================
+#include "globals.h"
 
 
 // === Function prototypes ================================

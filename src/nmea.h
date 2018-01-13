@@ -13,16 +13,12 @@
 
 #include <stm32f4xx.h>		// Processor STM32F407IG
 #include "lcd.h"
-
-// === Defines ============================================
-
-#define NMEA_stringlength	120
+#include "string.h"
+#include "globals.h"
 
 // === Variables ==========================================
 
-//NMEA-Data
-extern char NMEA_string[NMEA_stringlength];
-extern struct NMEA
+typedef struct
 {
 	char GGA[NMEA_stringlength];
 	char GLL[NMEA_stringlength];
@@ -31,10 +27,7 @@ extern struct NMEA
 	char RMC[NMEA_stringlength];
 	char VTG[NMEA_stringlength];
 	char ZDA[NMEA_stringlength];
-}NMEA;
-extern uint8_t NMEAStringReadyFlag = 0;
-//Gyro-Data
-extern int16_t X_RawError, Y_RawError, Z_RawError;
+}NMEA_typedef;
 
 // === Function prototypes ================================
 

@@ -11,23 +11,21 @@
 
 // === Variables ==========================================
 
-//NMEA-Data
-char NMEA_string[NMEA_stringlength];
-struct NMEA
-{
-	char GGA[NMEA_stringlength];
-	char GLL[NMEA_stringlength];
-	char GSA[NMEA_stringlength];
-	char GSV[NMEA_stringlength];
-	char RMC[NMEA_stringlength];
-	char VTG[NMEA_stringlength];
-	char ZDA[NMEA_stringlength];
-}NMEA;
-uint8_t NMEAStringReadyFlag = 0;
-//Gyro-Data
-int16_t X_RawError, Y_RawError, Z_RawError;
+NMEA_typedef NMEA;
 
 // === Functions ==========================================
+
+void init_nmea (void)
+{
+	strncpy(NMEA.GGA, "GGA:", 4);
+	strncpy(NMEA.GSA, "GSA:", 4);
+	strncpy(NMEA.GLL, "GLL:", 4);
+	strncpy(NMEA.GSV, "GSV:", 4);
+	strncpy(NMEA.RMC, "RMC:", 4);
+	strncpy(NMEA.VTG, "VTG:", 4);
+	strncpy(NMEA.ZDA, "ZDA:", 4);
+}
+
 // get lcd segment lenght
 uint8_t GetSegment_Length(char *str)
 {
