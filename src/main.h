@@ -30,7 +30,10 @@
 // nmea
 #include "nmea.h"
 
+// === Defines =============================================
 
+#define gps_timeout	100 			// with a Loopdelay of 10ms equals 1s
+#define a_gyr_timeout	10 			// with a Loopdelay of 10ms equals 100ms
 
 
 #endif /* MAIN_H_ */

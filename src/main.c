@@ -2,7 +2,7 @@
 @file		main.c
 @version	1.0
 @date		12.01.2018
-@author	M. Baour
+@author		M. Baour
 @brief		Main Programm GPS
 **********************************************************/
 
@@ -29,6 +29,14 @@ StatesMain statesMain = IDLE;
 
 /*----- Data ---------------------------------------------------------------*/
 static __IO uint32_t TimingDelay;
+
+uint8_t gps_data_timeout = 0;
+uint8_t a_gyr_data_timeout = 0;
+
+uint8_t gps_valid_flag = 0;
+uint8_t gps_valid = 0;
+uint8_t gps_checksum = 0;
+
 
 
 // === Function prototypes ================================
@@ -62,12 +70,15 @@ int main()
 	// Init NMEA struct
 
 
-	// endless
+	// Main endless loop
 	for( ;; )
 	{
 		// loop delay
 		loopDelay( 10 * _1MS );
 
+		// timeout_variables
+		gps_data_timeout ++;
+		a_gyr_data_timeout ++;
 
 		// Main FSM
 		mainFSM();
@@ -83,21 +94,57 @@ void mainFSM()
 	{
 		case IDLE:
 
+			if (gps_data_timeout >= gps_timeout)
+			{
+				gps_data_timeout = 0;		// reset timeout
+				statesMain = GET_GPS;		// change state
+			}
+
+			if (a_gyr_data_timeout >= a_gyr_timeout)
+			{
+				a_gyr_data_timeout = 0;
+				statesMain = GET_A_GYR_DATA;
+			}
+
+			if (gps_valid_flag >= 1)
+			{
+				// display GPS-Data
+			}
+			else
+			{
+				// Kallmann Filter
+			}
 
 		break;
 
 		case GET_GPS:
 
+			// get gps Data
+			// inbsert checksum function (asm)
+			statesMain = CHECK_GPS_VALID;
 
 		break;
 
 		case CHECK_GPS_VALID:
 
+			if((gps_valid >= 1) && (gps_checksum >=1))
+			{
+				gps_valid_flag = 1;
+			}
+			else
+			{
+				gps_valid_flag = 0;
+			}
+			statesMain = IDLE;
 
 		break;
 
 		case GET_A_GYR_DATA:
 
+			ReadAccelero(&ax,&ay,&az);
+			ReadGyro(&dx,&dy,&dz);
+
+			statesMain = IDLE;
 
 		break;
 

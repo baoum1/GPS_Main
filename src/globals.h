@@ -28,6 +28,7 @@ uint8_t NMEAStringReadyFlag = 0;
 
 //Gyro-Data
 int16_t X_RawError, Y_RawError, Z_RawError;
+int16_t ax, ay, az, dx, dy, dz;
 
 /*----- Data types ---------------------------------------------------------*/
 ERROR_CODES err_code __attribute__((unused));
