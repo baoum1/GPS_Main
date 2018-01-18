@@ -32,9 +32,13 @@ typedef struct
 // === Function prototypes ================================
 
 // get lcd segment lenght
-uint8_t GetSegment_Length(char *str);
+//uint8_t GetSegment_Length(char *str);
 
 // display nmea string on LCD
 void Display_NMEA(char *NMEA_string);
 
 #endif /* NMEA_H_ */
+
+// === Assembler subroutines prototypes ================================
+extern int Kontrollsumme(char *str);
+extern int GetSegment_Length(char *str);

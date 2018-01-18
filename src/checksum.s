@@ -11,7 +11,8 @@
 .fpu softvfp
 .thumb
 
-.global main
+.global Kontrollsumme
+.global GetSegment_Length
  
     .data                   @ section data (initialized data)
 /************************************************************************
@@ -29,9 +30,8 @@
  Die zwei Zahlen nach dem '*' sind im HEX Format und muessen aneinandergereiht dem EXOR Wert entsprechen.
  */
 
-kontrollsumme:
+Kontrollsumme:
  	PUSH	{r4, lr}
- 	LDR		r0, =str1
  	MOV		r1, r0
  	MOV		r0,	#1			// Rueckgabewert: 1 wenn korrekt, 0 wenn fehlerhaft
 
@@ -39,7 +39,7 @@ kontrollsumme:
  loop1:
  	LDRB	r2, [r1], #1
  	CMP		r2, #0
- 	BEQ		ende
+ 	BEQ		wrong
  	CMP 	r2, #'$'
  	BEQ		data
  	B		loop1
@@ -71,7 +71,7 @@ kontrollsumme:
 	SUB		r4, #48
 	ADD		r2, r4
 	CMP		r2, r3
-	BEQ		loop1
+	BEQ		ende
 	B		wrong
 
  wrong:
@@ -80,4 +80,31 @@ kontrollsumme:
 
  ende:
  	POP		{r4, pc}
+
+
+
+//Segmentlaenge berechnen
+GetSegment_Length:
+ 	PUSH	{lr}
+ 	MOV		r1, r0
+ 	MOV		r0,	#0			// Rueckgabewert: Segmentlaenge
+
+// Erstes '$' zeichen wird gesucht
+ loop3:
+ 	LDRB	r2, [r1], #1
+ 	CMP 	r2, #'$'
+ 	BEQ		loop4
+ 	B		loop3
+
+// Die Daten zwichen '$' und '*' werden gezaehlt
+ loop4:
+ 	LDRB	r2, [r1], #1
+ 	CMP		r2, '*'
+ 	BEQ		ende2
+ 	ADD		r0, #1
+ 	B		loop4
+
+ ende2:
+ 	POP		{pc}
+
 

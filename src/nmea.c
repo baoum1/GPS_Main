@@ -27,23 +27,23 @@ void init_nmea (void)
 }
 
 // get lcd segment lenght
-uint8_t GetSegment_Length(char *str)
-{
-	uint8_t MaxLength = min((LCD_HOR_RESOLUTION / LCD_GetFont()->width),strlen(str));
-	for (int segment_index = 0; segment_index<MaxLength; segment_index++)
-	{
-		switch (str[segment_index])
-		{
-			case '$':
-				return 0;
-			case '*':
-				return segment_index+3;
-			default:
-				break;
-		}
-	}
-	return 0;
-}
+//uint8_t GetSegment_Length(char *str)
+//{
+	//uint8_t MaxLength = min((LCD_HOR_RESOLUTION / LCD_GetFont()->width),strlen(str));
+	//for (int segment_index = 0; segment_index<MaxLength; segment_index++)
+	//{
+		//switch (str[segment_index])
+		//{
+			//case '$':
+				//return 0;
+			//case '*':
+				//return segment_index+3;
+			//default:
+				//break;
+		//}
+	//}
+	//return 0;
+//}
 
 // display nmea string on LCD
 void Display_NMEA(char *NMEA_string)
@@ -63,10 +63,12 @@ void Display_NMEA(char *NMEA_string)
 							if (NMEA_string[search+5] == 'A')
 							{
 								SegmentLength = GetSegment_Length(&NMEA_string[search+6]);
-								// TODO: only copy if checksum correct: EXOR(NMEA_string[search+1]-to-NMEA_string[search+SegmentLength+2]
-								strncpy(&NMEA.GGA[4], &NMEA_string[search+6], SegmentLength);
-								if (SegmentLength == 0) SegmentLength = 1;
-								else SegmentLength+=6;
+								if (Kontrollsumme(&NMEA_string[search+1]) == 1){
+									//only copy if checksum correct: EXOR(NMEA_string[search+1]-to-NMEA_string[search+SegmentLength+2]
+									strncpy(&NMEA.GGA[4], &NMEA_string[search+6], SegmentLength);
+									if (SegmentLength == 0) SegmentLength = 1;
+									else SegmentLength+=6;
+								}
 							}
 							break;
 						case 'S':
