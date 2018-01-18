@@ -6,8 +6,8 @@
 @brief		global variables and includes
 **********************************************************/
 
-#ifndef VARIABLES_H_
-#define VARIABLES_H_
+#ifndef GLOBALS_H_
+#define GLOBALS_H_
 
 // === Includes ===========================================
 
@@ -23,7 +23,7 @@
 char NMEA_string[NMEA_stringlength];
 
 
-uint8_t NMEAStringReadyFlag = 0;
+static volatile uint8_t NMEAStringReadyFlag;
 
 
 //Gyro-Data

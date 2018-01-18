@@ -8,8 +8,6 @@
 
 // === Includes ===========================================
 
-#include "main.h"
-
 #include <stm32f4xx.h>		// Processor STM32F407IG
 #include <carme.h>			// CARME Module
 #include <stdio.h>
@@ -61,7 +59,9 @@ uint8_t a_gyr_data_timeout = 0;
 uint8_t gps_valid_flag = 0;
 uint8_t gps_valid = 0;
 uint8_t gps_checksum = 0;
+uint8_t gps_sat_number = 0;
 
+char display_text[30];		/* buffer for LCD text */
 
 
 // === Function prototypes ================================
@@ -73,12 +73,15 @@ void mainFSM();
 
 int main()
 {
+	initDelayFuctions();
 
 	/* LCD Init */
 	LCD_SetTextColor(GUI_COLOR_WHITE);	// Schfiftfarbe setzen
-	LCD_SetFont(&font_5x7);
+	LCD_SetFont(&font_6x13);
 
 	LCD_Init(); 						// CARME LCD initialisieren
+	snprintf(display_text, sizeof(display_text), "Very nice GPS system");
+	LCD_DisplayStringLine(0, display_text);
 
 	/* USART1 Init */
 	Init_USART1();
@@ -98,15 +101,17 @@ int main()
 	// Main endless loop
 	for( ;; )
 	{
-		// loop delay
-		loopDelay( 10 * _1MS );
 
 		// timeout_variables
 		gps_data_timeout ++;
-		a_gyr_data_timeout ++;
+		//a_gyr_data_timeout ++;
 
 		// Main FSM
 		mainFSM();
+
+
+		// loop delay
+		loopDelay( 10 * _1MS );
 
 	}
 	return 0U;
@@ -119,24 +124,30 @@ void mainFSM()
 	{
 		case IDLE:
 
-			if (gps_data_timeout >= gps_timeout)
+			snprintf(display_text, sizeof(display_text), "%02d SAT", gps_sat_number);
+			LCD_DisplayStringLine(8, display_text);
+
+			if ((gps_data_timeout >= gps_timeout))
 			{
 				gps_data_timeout = 0;		// reset timeout
 				statesMain = GET_GPS;		// change state
 			}
 
-			if (a_gyr_data_timeout >= a_gyr_timeout)
+			/*if ((a_gyr_data_timeout >= a_gyr_timeout) && !(gps_data_timeout >= gps_timeout))
 			{
 				a_gyr_data_timeout = 0;
 				statesMain = GET_A_GYR_DATA;
-			}
+			}*/
 
-			if (gps_valid_flag >= 1)
+			if ((gps_valid_flag >= 1) && (gps_sat_number >= 3))
 			{
-				// display GPS-Data
+				LCD_ClearLine(3);
+				display_gps_pos();
 			}
 			else
 			{
+				snprintf(display_text, sizeof(display_text), "No GPS Data available");
+				LCD_DisplayStringLine(3, display_text);
 				// Kallmann Filter
 			}
 
@@ -145,20 +156,31 @@ void mainFSM()
 		case GET_GPS:
 
 			// get gps Data
-			// inbsert checksum function (asm)
+			if (NMEAStringReadyFlag)
+			{
+				NMEAStringReadyFlag = 0;
+				empty_NMEA_string();			// clear for new data
+				read_NMEA(NMEA_string);
+				gps_sat_number = get_gps_sat_number();
+			}
+
+
+			// insert checksum function (asm)
+			gps_checksum = 1; // As long as checksum function doensnt exist
 			statesMain = CHECK_GPS_VALID;
 
 		break;
 
 		case CHECK_GPS_VALID:
 
-			if((gps_valid >= 1) && (gps_checksum >=1))
+			if((gps_sat_number >= 3) && (gps_checksum >=1))
 			{
 				gps_valid_flag = 1;
 			}
 			else
 			{
 				gps_valid_flag = 0;
+
 			}
 			statesMain = IDLE;
 
