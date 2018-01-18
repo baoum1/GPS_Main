@@ -15,6 +15,8 @@
 #include "lcd.h"
 #include "string.h"
 #include "globals.h"
+#include "stdio.h"
+#include "stdlib.h"
 
 // === Variables ==========================================
 
@@ -34,8 +36,17 @@ typedef struct
 // get lcd segment lenght
 //uint8_t GetSegment_Length(char *str);
 
-// display nmea string on LCD
-void Display_NMEA(char *NMEA_string);
+// read nmea string from Input Buffer, fill into NMEA struct
+void read_NMEA(char *NMEA_string);
+
+// empty NMEA Struct
+void empty_NMEA_string (void);
+
+// read sat Number from string
+uint8_t get_gps_sat_number(void);
+
+// display pos on lcd
+void display_gps_pos(void);
 
 #endif /* NMEA_H_ */
 

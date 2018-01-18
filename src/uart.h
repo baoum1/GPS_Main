@@ -14,6 +14,7 @@
 #include "globals.h"
 
 
+
 // === Function prototypes ================================
 // Init USART
 void Init_USART1(void);
