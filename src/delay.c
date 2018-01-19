@@ -14,6 +14,7 @@
 // ms tick variable
 static volatile uint32_t cntLoopDelay = 0;
 static volatile uint32_t cntDelay = 0;
+extern volatile uint32_t uartTimeout;
 
 // === Functions ==========================================
 
@@ -64,6 +65,7 @@ void TIM7_IRQHandler ()
 	// incremend systicks
 	cntLoopDelay++;
 	cntDelay++;
+	uartTimeout++;
 }
 
 

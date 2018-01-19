@@ -26,25 +26,6 @@ void init_nmea(void)
 	strncpy(NMEA.ZDA, "ZDA:", 4);
 }
 
-// get lcd segment lenght
-//uint8_t GetSegment_Length(char *str)
-//{
-	//uint8_t MaxLength = min((LCD_HOR_RESOLUTION / LCD_GetFont()->width),strlen(str));
-	//for (int segment_index = 0; segment_index<MaxLength; segment_index++)
-	//{
-		//switch (str[segment_index])
-		//{
-			//case '$':
-				//return 0;
-			//case '*':
-				//return segment_index+3;
-			//default:
-				//break;
-		//}
-	//}
-	//return 0;
-//}
-
 // sort nmea strin into struct
 void sort_NMEA(char *NMEA_string)
 {
@@ -53,108 +34,112 @@ void sort_NMEA(char *NMEA_string)
 	uint8_t SegmentLength = 1;
 	for ( int search=0 ; search<NMEA_stringlength ; search+=SegmentLength )
 	{
-		if ( (NMEA_string[search] == '$' && NMEA_string[search+1] == 'G') && NMEA_string[search+2] == 'P' && Kontrollsumme(&NMEA_string[search]) )
+		if ( (NMEA_string[search] == '$' && NMEA_string[search+1] == 'G') && NMEA_string[search+2] == 'P')
 		{
-			SegmentLength = GetSegment_Length(&NMEA_string[search]);
-			switch (NMEA_string[search+3])
+			if (Kontrollsumme(&NMEA_string[search]))
 			{
-				case 'G':
-					switch (NMEA_string[search+4]) {
-						case 'G':
-							if (NMEA_string[search+5] == 'A')
-							{
-								// check if struct segment empty, if not, delete
-								if (NMEA.GGA[4] != 0)
+				// length of found segment
+				SegmentLength = GetSegment_Length(&NMEA_string[search]);
+				switch (NMEA_string[search+3])
+				{
+					case 'G':
+						switch (NMEA_string[search+4]) {
+							case 'G':
+								if (NMEA_string[search+5] == 'A')
 								{
-									for (int i = 4; i<NMEA_stringlength; i++)
-										if (NMEA.GGA[i] != 0) NMEA.GGA[i] = 0;
-										else break;
+									// check if struct segment empty, if not, delete
+									if (NMEA.GGA[4] != 0)
+									{
+										for (int i = 4; i<NMEA_stringlength; i++)
+											if (NMEA.GGA[i] != 0) NMEA.GGA[i] = 0;
+											else break;
+									}
+									strncpy(&NMEA.GGA[4], &NMEA_string[search+6], SegmentLength-6);
 								}
-								strncpy(&NMEA.GGA[4], &NMEA_string[search+6], SegmentLength-6);
-							}
-							break;
-						case 'S':
-							if (NMEA_string[search+5] == 'A')
-							{
-								if (NMEA.GSA[4] != 0)
+								break;
+							case 'S':
+								if (NMEA_string[search+5] == 'A')
 								{
-									for (int i = 4; i<NMEA_stringlength; i++)
-										if (NMEA.GSA[i] != 0) NMEA.GSA[i] = 0;
-										else break;
+									if (NMEA.GSA[4] != 0)
+									{
+										for (int i = 4; i<NMEA_stringlength; i++)
+											if (NMEA.GSA[i] != 0) NMEA.GSA[i] = 0;
+											else break;
+									}
+									strncpy(&NMEA.GSA[4], &NMEA_string[search+6], SegmentLength-6);
 								}
-								strncpy(&NMEA.GSA[4], &NMEA_string[search+6], SegmentLength-6);
-							}
-							else if (NMEA_string[search+5] == 'V')
-							{
-								if (NMEA.GSV[4] != 0)
+								else if (NMEA_string[search+5] == 'V')
 								{
-									for (int i = 4; i<NMEA_stringlength; i++)
-										if (NMEA.GSV[i] != 0) NMEA.GSV[i] = 0;
-										else break;
+									if (NMEA.GSV[4] != 0)
+									{
+										for (int i = 4; i<NMEA_stringlength; i++)
+											if (NMEA.GSV[i] != 0) NMEA.GSV[i] = 0;
+											else break;
+									}
+									strncpy(&NMEA.GSV[4], &NMEA_string[search+6], SegmentLength-6);
 								}
-								strncpy(&NMEA.GSV[4], &NMEA_string[search+6], SegmentLength-6);
-							}
-							break;
-						case 'L':
-							if (NMEA_string[search+5] == 'L')
-							{
-								if (NMEA.GLL[4] != 0)
+								break;
+							case 'L':
+								if (NMEA_string[search+5] == 'L')
 								{
-									for (int i = 4; i<NMEA_stringlength; i++)
-										if (NMEA.GLL[i] != 0) NMEA.GLL[i] = 0;
-										else break;
+									if (NMEA.GLL[4] != 0)
+									{
+										for (int i = 4; i<NMEA_stringlength; i++)
+											if (NMEA.GLL[i] != 0) NMEA.GLL[i] = 0;
+											else break;
+									}
+									strncpy(&NMEA.GLL[4], &NMEA_string[search+6], SegmentLength-6);
 								}
-								strncpy(&NMEA.GLL[4], &NMEA_string[search+6], SegmentLength-6);
-							}
-							break;
-						default:
-							SegmentLength = 0;
-							break;
-					}
+								break;
+							default:
+								SegmentLength = 0;
+								break;
+						}
 
-					break;
-				case 'R':
-					if ( NMEA_string[search+4] == 'M' && NMEA_string[search+5] == 'C')
-					{
-						if (NMEA.RMC[4] != 0)
+						break;
+					case 'R':
+						if ( NMEA_string[search+4] == 'M' && NMEA_string[search+5] == 'C')
 						{
-							for (int i = 4; i<NMEA_stringlength; i++)
-								if (NMEA.RMC[i] != 0) NMEA.RMC[i] = 0;
-								else break;
+							if (NMEA.RMC[4] != 0)
+							{
+								for (int i = 4; i<NMEA_stringlength; i++)
+									if (NMEA.RMC[i] != 0) NMEA.RMC[i] = 0;
+									else break;
+							}
+							strncpy(&NMEA.RMC[4], &NMEA_string[search+6], SegmentLength-6);
 						}
-						strncpy(&NMEA.RMC[4], &NMEA_string[search+6], SegmentLength-6);
-					}
-					break;
-				case 'V':
-					if (NMEA_string[search+4] == 'T' && NMEA_string[search+5] == 'G')
-					{
-						if (NMEA.VTG[4] != 0)
+						break;
+					case 'V':
+						if (NMEA_string[search+4] == 'T' && NMEA_string[search+5] == 'G')
 						{
-							for (int i = 4; i<NMEA_stringlength; i++)
-								if (NMEA.VTG[i] != 0) NMEA.VTG[i] = 0;
-								else break;
+							if (NMEA.VTG[4] != 0)
+							{
+								for (int i = 4; i<NMEA_stringlength; i++)
+									if (NMEA.VTG[i] != 0) NMEA.VTG[i] = 0;
+									else break;
+							}
+							strncpy(&NMEA.VTG[4], &NMEA_string[search+6], SegmentLength-6);
 						}
-						strncpy(&NMEA.VTG[4], &NMEA_string[search+6], SegmentLength-6);
-					}
-					break;
-				case 'Z':
-					if (NMEA_string[search+4] == 'D' && NMEA_string[search+5] == 'A')
-					{
-						if (NMEA.ZDA[4] != 0)
+						break;
+					case 'Z':
+						if (NMEA_string[search+4] == 'D' && NMEA_string[search+5] == 'A')
 						{
-							for (int i = 4; i<NMEA_stringlength; i++)
-								if (NMEA.ZDA[i] != 0) NMEA.ZDA[i] = 0;
-								else break;
+							if (NMEA.ZDA[4] != 0)
+							{
+								for (int i = 4; i<NMEA_stringlength; i++)
+									if (NMEA.ZDA[i] != 0) NMEA.ZDA[i] = 0;
+									else break;
+							}
+							strncpy(&NMEA.ZDA[4], &NMEA_string[search+6], SegmentLength-6);
 						}
-						strncpy(&NMEA.ZDA[4], &NMEA_string[search+6], SegmentLength-6);
-					}
-					break;
-				default:
-					SegmentLength = 0;
-					break;
+						break;
+					default:
+						SegmentLength = 0;
+						break;
+				}
+				if (SegmentLength == 0) SegmentLength = 1;
+				else SegmentLength += 4;
 			}
-			if (SegmentLength == 0) SegmentLength = 1;
-			else SegmentLength += 3;
 		}
 		else SegmentLength = 1;
 	}
@@ -266,45 +251,48 @@ void display_gps_pos(void)
 	char display_text_nmea[30];		/* buffer for LCD text */
 
 	int count = 0;
-	for (int i = 1; i < NMEA_stringlength; i++)
+	if (NMEA.GLL[4] != 0)
 	{
-		if (NMEA.GGA[i] == ',')
+		for (int i = 4; i < NMEA_stringlength; i++)
 		{
-			count ++;
+			if (NMEA.GLL[i] == ',')
+			{
+				count ++;
+			}
+
+			if(count == 2)
+			{
+				lat_min = (10*(((int)NMEA.GLL[i+1])-'0') + (((int)NMEA.GLL[i+2])-'0'));
+				lat_sec_h = (10*(((int)NMEA.GLL[i+3])-'0') + (((int)NMEA.GLL[i+4])-'0'));
+				lat_sec_l = (100*(((int)NMEA.GLL[i+6])-'0') + 10*(((int)NMEA.GLL[i+7])-'0') + (((int)NMEA.GLL[i+8])-'0'));
+			}
+
+			if(count == 3)
+			{
+				lat_orientation = NMEA.GLL[i+1];
+			}
+
+			if(count == 4)
+			{
+				long_min = (100*(((int)NMEA.GLL[i+1])-'0') + 10*(((int)NMEA.GLL[i+2])-'0') + (((int)NMEA.GLL[i+3])-'0'));
+				long_sec_h = (10*(((int)NMEA.GLL[i+4])-'0') + (((int)NMEA.GLL[i+5])-'0'));
+				long_sec_l = (100*(((int)NMEA.GLL[i+7])-'0') + 10*(((int)NMEA.GLL[i+8])-'0') + (((int)NMEA.GLL[i+9])-'0'));
+			}
+
+			if(count == 5)
+			{
+				long_orientation = NMEA.GLL[i+1];
+			}
 		}
 
-		if(count == 2)
-		{
-			lat_min = (10*(((int)NMEA.GGA[i+1])-'0') + (((int)NMEA.GGA[i+2])-'0'));
-			lat_sec_h = (10*(((int)NMEA.GGA[i+3])-'0') + (((int)NMEA.GGA[i+4])-'0'));
-			lat_sec_l = (100*(((int)NMEA.GGA[i+6])-'0') + 10*(((int)NMEA.GGA[i+7])-'0') + (((int)NMEA.GGA[i+8])-'0'));
-		}
+		LCD_ClearLine(4);
+		snprintf(display_text_nmea, sizeof(display_text_nmea), "%2d %2d,%3d ", lat_min, lat_sec_h, lat_sec_l  );
+		strcat(display_text_nmea, &lat_orientation);
+		LCD_DisplayStringLine(13, display_text_nmea);
 
-		if(count == 3)
-		{
-			lat_orientation = NMEA.GGA[i+1];
-		}
-
-		if(count == 4)
-		{
-			long_min = (100*(((int)NMEA.GGA[i+1])-'0') + 10*(((int)NMEA.GGA[i+2])-'0') + (((int)NMEA.GGA[i+3])-'0'));
-			long_sec_h = (10*(((int)NMEA.GGA[i+4])-'0') + (((int)NMEA.GGA[i+5])-'0'));
-			long_sec_l = (100*(((int)NMEA.GGA[i+7])-'0') + 10*(((int)NMEA.GGA[i+8])-'0') + (((int)NMEA.GGA[i+9])-'0'));
-		}
-
-		if(count == 5)
-		{
-			long_orientation = NMEA.GGA[i+1];
-		}
+		LCD_ClearLine(5);
+		snprintf(display_text_nmea, sizeof(display_text_nmea), "%3d %2d,%3d ", long_min, long_sec_h, long_sec_l );
+		strcat(display_text_nmea, &long_orientation);
+		LCD_DisplayStringLine(14, display_text_nmea);
 	}
-
-	LCD_ClearLine(4);
-	snprintf(display_text_nmea, sizeof(display_text_nmea), "%2d° %2d,%3d ", lat_min, lat_sec_h, lat_sec_l  );
-	strcat(display_text_nmea, &lat_orientation);
-	LCD_DisplayStringLine(4, display_text_nmea);
-
-	LCD_ClearLine(5);
-	snprintf(display_text_nmea, sizeof(display_text_nmea), "%3d° %2d,%3d ", long_min, long_sec_h, long_sec_l );
-	strcat(display_text_nmea, &long_orientation);
-	LCD_DisplayStringLine(5, display_text_nmea);
 }

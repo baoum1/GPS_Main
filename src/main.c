@@ -14,7 +14,6 @@
 #include <lcd.h>
 #include "stdlib.h"					/* Standard Library	*/
 #include "string.h"					/* String Library */
-//#include "globals.h"					/* Global Variables */
 
 // delay
 #include "delay.h"
@@ -106,7 +105,7 @@ int main()
 
 		// timeout_variables
 		gps_data_timeout ++;
-		//a_gyr_data_timeout ++;
+		a_gyr_data_timeout ++;
 
 		// Main FSM
 		mainFSM();
@@ -149,15 +148,17 @@ void mainFSM()
 				NMEAStringReadyFlag = 0;
 				sort_NMEA(NMEA_string);
 				empty_NMEA_string();			// clear for new data
-				display_raw_NMEA();
-				gps_sat_number = get_gps_sat_number();
+				display_raw_NMEA();				// for DBG purpose
+				statesMain = CHECK_GPS_VALID;
 			}
-			statesMain = CHECK_GPS_VALID;
+			else statesMain = IDLE;
+
 
 		break;
 
 		case CHECK_GPS_VALID:
 
+			gps_sat_number = get_gps_sat_number();
 			snprintf(display_text, sizeof(display_text), "There are %02d Satelites around.", gps_sat_number);
 			LCD_DisplayStringLine(10, display_text);
 			if (gps_sat_number >= 3)

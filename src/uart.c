@@ -9,6 +9,8 @@
 // === Includes ===========================================
 #include "uart.h"
 
+// === Variables ==========================================
+uint32_t uartTimeout = 0;
 
 // === Functions ==========================================
 void Init_USART1(void)
@@ -63,7 +65,8 @@ void USART1_IRQHandler(void)
 		static uint8_t cnt = 0; // this counter is used to determine the current string length
 		char t = USART1->DR;  // the character from the USART1 data register is saved in t
 		static uint8_t NMEA_start = 0;
-		if (cnt < NMEA_stringlength)
+		if (cnt == 0) uartTimeout = 0;
+		if (/*cnt < NMEA_stringlength &&*/ uartTimeout < 50)
 		{
 			switch (t)
 			{
@@ -82,6 +85,7 @@ void USART1_IRQHandler(void)
 			if(NMEA_start)
 			{
 				NMEA_string[cnt++] = t;
+				uartTimeout = 0;
 			}
 		}
 		else
