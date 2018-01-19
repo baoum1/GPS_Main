@@ -14,6 +14,7 @@
 #include <lcd.h>
 #include "stdlib.h"					/* Standard Library	*/
 #include "string.h"					/* String Library */
+//#include "globals.h"					/* Global Variables */
 
 // delay
 #include "delay.h"
@@ -51,17 +52,18 @@ StatesMain statesMain = IDLE;
 
 
 /*----- Data ---------------------------------------------------------------*/
+// NMEA-Variables
+uint8_t NMEAStringReadyFlag;
+
 static __IO uint32_t TimingDelay;
 
 uint8_t gps_data_timeout = 0;
 uint8_t a_gyr_data_timeout = 0;
 
-uint8_t gps_valid_flag = 0;
 uint8_t gps_valid = 0;
-uint8_t gps_checksum = 0;
 uint8_t gps_sat_number = 0;
 
-char display_text[30];		/* buffer for LCD text */
+char display_text[(LCD_HOR_RESOLUTION / 6)];		/* buffer for LCD text */
 
 
 // === Function prototypes ================================
@@ -77,10 +79,10 @@ int main()
 
 	/* LCD Init */
 	LCD_SetTextColor(GUI_COLOR_WHITE);	// Schfiftfarbe setzen
-	LCD_SetFont(&font_6x13);
+	LCD_SetFont(&font_5x7);
 
 	LCD_Init(); 						// CARME LCD initialisieren
-	snprintf(display_text, sizeof(display_text), "Very nice GPS system");
+	snprintf(display_text, sizeof(display_text), "Display GPS-Data if avalible:");
 	LCD_DisplayStringLine(0, display_text);
 
 	/* USART1 Init */
@@ -96,7 +98,7 @@ int main()
 	GyroInit();
 
 	// Init NMEA struct
-
+	init_nmea();
 
 	// Main endless loop
 	for( ;; )
@@ -124,9 +126,6 @@ void mainFSM()
 	{
 		case IDLE:
 
-			snprintf(display_text, sizeof(display_text), "%02d SAT", gps_sat_number);
-			LCD_DisplayStringLine(8, display_text);
-
 			if ((gps_data_timeout >= gps_timeout))
 			{
 				gps_data_timeout = 0;		// reset timeout
@@ -139,17 +138,7 @@ void mainFSM()
 				statesMain = GET_A_GYR_DATA;
 			}*/
 
-			if ((gps_valid_flag >= 1) && (gps_sat_number >= 3))
-			{
-				LCD_ClearLine(3);
-				display_gps_pos();
-			}
-			else
-			{
-				snprintf(display_text, sizeof(display_text), "No GPS Data available");
-				LCD_DisplayStringLine(3, display_text);
-				// Kallmann Filter
-			}
+
 
 		break;
 
@@ -159,28 +148,28 @@ void mainFSM()
 			if (NMEAStringReadyFlag)
 			{
 				NMEAStringReadyFlag = 0;
+				sort_NMEA(NMEA_string);
+				display_raw_NMEA();
+				//gps_sat_number = get_gps_sat_number();
 				empty_NMEA_string();			// clear for new data
-				read_NMEA(NMEA_string);
-				gps_sat_number = get_gps_sat_number();
 			}
-
-
-			// insert checksum function (asm)
-			gps_checksum = 1; // As long as checksum function doensnt exist
 			statesMain = CHECK_GPS_VALID;
 
 		break;
 
 		case CHECK_GPS_VALID:
 
-			if((gps_sat_number >= 3) && (gps_checksum >=1))
+			snprintf(display_text, sizeof(display_text), "There are %02d Satelites around.", gps_sat_number);
+			LCD_DisplayStringLine(10, display_text);
+			if (gps_sat_number >= 3)
 			{
-				gps_valid_flag = 1;
+				LCD_ClearLine(9);
+				//display_gps_pos();
 			}
 			else
 			{
-				gps_valid_flag = 0;
-
+				snprintf(display_text, sizeof(display_text), "Sadly, there is no GPS available here.");
+				LCD_DisplayStringLine(9, display_text);
 			}
 			statesMain = IDLE;
 

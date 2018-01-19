@@ -33,16 +33,15 @@
 Kontrollsumme:
  	PUSH	{r4, lr}
  	MOV		r1, r0
- 	MOV		r0,	#1			// Rueckgabewert: 1 wenn korrekt, 0 wenn fehlerhaft
 
 // Erstes '$' zeichen wird gesucht
- loop1:
+ /*loop1:
  	LDRB	r2, [r1], #1
  	CMP		r2, #0
  	BEQ		wrong
  	CMP 	r2, #'$'
  	BEQ		data
- 	B		loop1
+ 	B		loop1*/
 
  data:
  	LDRB	r2, [r1], #1
@@ -79,6 +78,7 @@ Kontrollsumme:
  	B		ende
 
  ende:
+  	MOV		r0,	#1			// Rueckgabewert: 1 wenn korrekt, 0 wenn fehlerhaft
  	POP		{r4, pc}
 
 
@@ -90,11 +90,11 @@ GetSegment_Length:
  	MOV		r0,	#0			// Rueckgabewert: Segmentlaenge
 
 // Erstes '$' zeichen wird gesucht
- loop3:
+ /*loop3:
  	LDRB	r2, [r1], #1
  	CMP 	r2, #'$'
  	BEQ		loop4
- 	B		loop3
+ 	B		loop3*/
 
 // Die Daten zwichen '$' und '*' werden gezaehlt
  loop4:

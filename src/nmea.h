@@ -33,11 +33,14 @@ typedef struct
 
 // === Function prototypes ================================
 
-// get lcd segment lenght
-//uint8_t GetSegment_Length(char *str);
+// init nmea struct
+void init_nmea(void);
 
 // read nmea string from Input Buffer, fill into NMEA struct
-void read_NMEA(char *NMEA_string);
+void sort_NMEA(char *NMEA_string);
+
+// display raw GPS-Data for DBG purpose
+void display_raw_NMEA(void);
 
 // empty NMEA Struct
 void empty_NMEA_string (void);

@@ -23,7 +23,7 @@
 char NMEA_string[NMEA_stringlength];
 
 
-static volatile uint8_t NMEAStringReadyFlag;
+extern uint8_t NMEAStringReadyFlag;
 
 
 //Gyro-Data
