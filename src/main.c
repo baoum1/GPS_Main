@@ -130,15 +130,14 @@ void mainFSM()
 			{
 				gps_data_timeout = 0;		// reset timeout
 				statesMain = GET_GPS;		// change state
+				break;
 			}
 
-			/*if ((a_gyr_data_timeout >= a_gyr_timeout) && !(gps_data_timeout >= gps_timeout))
+			if (a_gyr_data_timeout >= a_gyr_timeout)
 			{
 				a_gyr_data_timeout = 0;
 				statesMain = GET_A_GYR_DATA;
-			}*/
-
-
+			}
 
 		break;
 
@@ -149,9 +148,9 @@ void mainFSM()
 			{
 				NMEAStringReadyFlag = 0;
 				sort_NMEA(NMEA_string);
-				display_raw_NMEA();
-				//gps_sat_number = get_gps_sat_number();
 				empty_NMEA_string();			// clear for new data
+				display_raw_NMEA();
+				gps_sat_number = get_gps_sat_number();
 			}
 			statesMain = CHECK_GPS_VALID;
 
@@ -164,7 +163,7 @@ void mainFSM()
 			if (gps_sat_number >= 3)
 			{
 				LCD_ClearLine(9);
-				//display_gps_pos();
+				display_gps_pos();
 			}
 			else
 			{

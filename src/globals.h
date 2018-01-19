@@ -15,7 +15,7 @@
 
 // === Defines ============================================
 
-#define NMEA_stringlength	120
+#define NMEA_stringlength	300
 
 // === Variables ==========================================
 

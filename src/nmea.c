@@ -51,7 +51,7 @@ void sort_NMEA(char *NMEA_string)
 	// Disable UART1 Interrupts
 	NVIC_DisableIRQ(USART1_IRQn);
 	uint8_t SegmentLength = 1;
-	for ( int search=0 ; search<NMEA_stringlength-6 ; search+=SegmentLength )
+	for ( int search=0 ; search<NMEA_stringlength ; search+=SegmentLength )
 	{
 		if ( (NMEA_string[search] == '$' && NMEA_string[search+1] == 'G') && NMEA_string[search+2] == 'P' && Kontrollsumme(&NMEA_string[search]) )
 		{
@@ -63,26 +63,52 @@ void sort_NMEA(char *NMEA_string)
 						case 'G':
 							if (NMEA_string[search+5] == 'A')
 							{
+								// check if struct segment empty, if not, delete
+								if (NMEA.GGA[4] != 0)
+								{
+									for (int i = 4; i<NMEA_stringlength; i++)
+										if (NMEA.GGA[i] != 0) NMEA.GGA[i] = 0;
+										else break;
+								}
 								strncpy(&NMEA.GGA[4], &NMEA_string[search+6], SegmentLength-6);
 							}
 							break;
 						case 'S':
 							if (NMEA_string[search+5] == 'A')
 							{
+								if (NMEA.GSA[4] != 0)
+								{
+									for (int i = 4; i<NMEA_stringlength; i++)
+										if (NMEA.GSA[i] != 0) NMEA.GSA[i] = 0;
+										else break;
+								}
 								strncpy(&NMEA.GSA[4], &NMEA_string[search+6], SegmentLength-6);
 							}
 							else if (NMEA_string[search+5] == 'V')
 							{
+								if (NMEA.GSV[4] != 0)
+								{
+									for (int i = 4; i<NMEA_stringlength; i++)
+										if (NMEA.GSV[i] != 0) NMEA.GSV[i] = 0;
+										else break;
+								}
 								strncpy(&NMEA.GSV[4], &NMEA_string[search+6], SegmentLength-6);
 							}
 							break;
 						case 'L':
 							if (NMEA_string[search+5] == 'L')
 							{
+								if (NMEA.GLL[4] != 0)
+								{
+									for (int i = 4; i<NMEA_stringlength; i++)
+										if (NMEA.GLL[i] != 0) NMEA.GLL[i] = 0;
+										else break;
+								}
 								strncpy(&NMEA.GLL[4], &NMEA_string[search+6], SegmentLength-6);
 							}
 							break;
 						default:
+							SegmentLength = 0;
 							break;
 					}
 
@@ -90,22 +116,41 @@ void sort_NMEA(char *NMEA_string)
 				case 'R':
 					if ( NMEA_string[search+4] == 'M' && NMEA_string[search+5] == 'C')
 					{
+						if (NMEA.RMC[4] != 0)
+						{
+							for (int i = 4; i<NMEA_stringlength; i++)
+								if (NMEA.RMC[i] != 0) NMEA.RMC[i] = 0;
+								else break;
+						}
 						strncpy(&NMEA.RMC[4], &NMEA_string[search+6], SegmentLength-6);
 					}
 					break;
 				case 'V':
 					if (NMEA_string[search+4] == 'T' && NMEA_string[search+5] == 'G')
 					{
+						if (NMEA.VTG[4] != 0)
+						{
+							for (int i = 4; i<NMEA_stringlength; i++)
+								if (NMEA.VTG[i] != 0) NMEA.VTG[i] = 0;
+								else break;
+						}
 						strncpy(&NMEA.VTG[4], &NMEA_string[search+6], SegmentLength-6);
 					}
 					break;
 				case 'Z':
 					if (NMEA_string[search+4] == 'D' && NMEA_string[search+5] == 'A')
 					{
+						if (NMEA.ZDA[4] != 0)
+						{
+							for (int i = 4; i<NMEA_stringlength; i++)
+								if (NMEA.ZDA[i] != 0) NMEA.ZDA[i] = 0;
+								else break;
+						}
 						strncpy(&NMEA.ZDA[4], &NMEA_string[search+6], SegmentLength-6);
 					}
 					break;
 				default:
+					SegmentLength = 0;
 					break;
 			}
 			if (SegmentLength == 0) SegmentLength = 1;
@@ -131,35 +176,40 @@ void display_raw_NMEA(void)
 
 void empty_NMEA_string (void)
 {
+	// Disable UART1 Interrupts
+	NVIC_DisableIRQ(USART1_IRQn);
+
 	// Empty NMEA string
 	for (int i = 0; i<NMEA_stringlength; i++)
 		NMEA_string[i] = '\0';
 
+	// Reenable UART1 interrupts
+	NVIC_EnableIRQ(USART1_IRQn);
+}
+
+void empty_NMEA_struct(void)
+{
 	// Empty NMEA struct
 	if (NMEA.GGA[4] != 0)
 	{
-
 		for (int i = 4; i<NMEA_stringlength; i++)
 			if (NMEA.GGA[i] != 0) NMEA.GGA[i] = 0;
 			else break;
 	}
 	if (NMEA.GLL[4] != 0)
 	{
-
 		for (int i = 4; i<NMEA_stringlength; i++)
 			if (NMEA.GLL[i] != 0) NMEA.GLL[i] = 0;
 			else break;
 	}
 	if (NMEA.GSA[4] != 0)
 	{
-
 		for (int i = 4; i<NMEA_stringlength; i++)
 			if (NMEA.GSA[i] != 0) NMEA.GSA[i] = 0;
 			else break;
 	}
 	if (NMEA.GSV[4] != 0)
 	{
-
 		for (int i = 4; i<NMEA_stringlength; i++)
 			if (NMEA.GSV[i] != 0) NMEA.GSV[i] = 0;
 			else break;
@@ -182,7 +232,6 @@ void empty_NMEA_string (void)
 			if (NMEA.ZDA[i] != 0) NMEA.ZDA[i] = 0;
 			else break;
 	}
-
 }
 
 uint8_t get_gps_sat_number(void)
